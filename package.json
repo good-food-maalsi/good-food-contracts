@@ -1,5 +1,5 @@
 {
-  "name": "@good-food/contracts",
+  "name": "@good-food-maalsi/contracts",
   "version": "1.0.0",
   "description": "Typed API contracts for Good Food microservices",
   "type": "module",
@@ -48,7 +48,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexandreMusic/good-food-contracts.git"
+    "url": "git+https://github.com/good-food-maalsi/good-food-contracts.git"
   },
   "keywords": [
     "good-food",
