@@ -1,36 +1,58 @@
-# @good-food/contracts
+# @good-food-maalsi/contracts
 
 Contrats d'API typés pour les micro-services Good Food utilisant [ts-rest](https://ts-rest.com/).
 
 ## Installation
 
-### 1. Créer un Personal Access Token GitHub
+### 1. Créer un Personal Access Token (PAT) GitHub
 
-1. Aller sur GitHub > Settings > Developer settings > Personal access tokens
-2. Créer un token avec la permission `read:packages`
+Tu peux utiliser **Classic** ou **Fine-grained**. Les deux fonctionnent pour installer le package.
+
+#### Option A : Classic token (rapide)
+
+1. GitHub → **Settings** (ton profil) → **Developer settings** → **Personal access tokens** → **Tokens (classic)**.
+2. **Generate new token (classic)**.
+3. Donne un nom (ex. `good-food npm`) et une expiration.
+4. Coche **une seule** permission : **`read:packages`** (ça coche aussi "Contents" en lecture, c’est normal).
+5. **Generate token**, copie le token (il commence par `ghp_`) et garde-le en lieu sûr.
+
+#### Option B : Fine-grained token (recommandé, plus sécurisé)
+
+1. GitHub → **Settings** → **Developer settings** → **Personal access tokens** → **Fine-grained tokens**.
+2. **Generate new token**.
+3. **Token name** : ex. `good-food npm`.
+4. **Expiration** : au choix.
+5. **Resource owner** : choisis l’organisation **good-food-maalsi** (ou ton compte si le repo est sous ton compte).
+6. **Repository access** : "Only select repositories" → sélectionne **good-food-contracts** (ou "All repositories" si tu préfères).
+7. **Permissions** → **Repository permissions** :
+   - **Contents** : Read-only (pour accéder au repo du package).
+   - **Packages** : Read-only (pour télécharger le package).
+8. **Generate token**, copie le token (il commence par `github_pat_`) et garde-le en lieu sûr.
 
 ### 2. Configurer `.npmrc`
 
 Ajouter dans chaque projet consommateur un fichier `.npmrc` :
 
 ```
-@good-food:registry=https://npm.pkg.github.com
+@good-food-maalsi:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${NPM_TOKEN}
 ```
 
 ### 3. Installer le package
 
 ```bash
-NPM_TOKEN=ghp_xxx npm install @good-food/contracts
+NPM_TOKEN=ghp_xxx npm install @good-food-maalsi/contracts
 ```
+
+(Remplace `ghp_xxx` par ton token Classic, ou par ton token Fine-grained qui commence par `github_pat_`.)
 
 ## Usage
 
 ### Côté serveur (Express)
 
 ```typescript
-import { createExpressEndpoints } from '@ts-rest/express';
-import { franchiseContract } from '@good-food/contracts/franchise';
+import { createExpressEndpoints } from "@ts-rest/express";
+import { franchiseContract } from "@good-food-maalsi/contracts/franchise";
 
 const router = createExpressEndpoints(franchiseContract.franchises, {
   getAll: async ({ query }) => {
@@ -44,14 +66,14 @@ const router = createExpressEndpoints(franchiseContract.franchises, {
   // ... autres handlers
 });
 
-app.use('/api', router);
+app.use("/api", router);
 ```
 
 ### Côté serveur (NestJS)
 
 ```typescript
-import { TsRestHandler, tsRestHandler } from '@ts-rest/nest';
-import { authContract } from '@good-food/contracts/auth';
+import { TsRestHandler, tsRestHandler } from "@ts-rest/nest";
+import { authContract } from "@good-food-maalsi/contracts/auth";
 
 @Controller()
 export class AuthController {
@@ -68,25 +90,27 @@ export class AuthController {
 ### Côté client (fetch)
 
 ```typescript
-import { initClient } from '@ts-rest/core';
-import { franchiseContract } from '@good-food/contracts/franchise';
+import { initClient } from "@ts-rest/core";
+import { franchiseContract } from "@good-food-maalsi/contracts/franchise";
 
 const client = initClient(franchiseContract, {
-  baseUrl: 'http://localhost:8080/franchise',
-  baseHeaders: { 'Content-Type': 'application/json' },
-  credentials: 'include',
+  baseUrl: "http://localhost:8080/franchise",
+  baseHeaders: { "Content-Type": "application/json" },
+  credentials: "include",
 });
 
 // Appels typés
-const franchises = await client.franchises.getAll({ query: { page: 1, limit: 10 } });
-const franchise = await client.franchises.getById({ params: { id: 'uuid' } });
+const franchises = await client.franchises.getAll({
+  query: { page: 1, limit: 10 },
+});
+const franchise = await client.franchises.getById({ params: { id: "uuid" } });
 ```
 
 ### Côté client (React Query)
 
 ```typescript
 import { initQueryClient } from '@ts-rest/react-query';
-import { franchiseContract } from '@good-food/contracts/franchise';
+import { franchiseContract } from '@good-food-maalsi/contracts/franchise';
 
 export const franchiseQuery = initQueryClient(franchiseContract, {
   baseUrl: 'http://localhost:8080/franchise',
@@ -115,7 +139,7 @@ import {
   RegisterInput,
   User,
   PublicUser,
-} from '@good-food/contracts/auth';
+} from "@good-food-maalsi/contracts/auth";
 ```
 
 ### Franchise
@@ -150,7 +174,7 @@ import {
   // Stock
   Stock,
   UpsertStockInput,
-} from '@good-food/contracts/franchise';
+} from "@good-food-maalsi/contracts/franchise";
 ```
 
 ## Workflow de développement
@@ -172,7 +196,7 @@ git push && git push --tags
 # 5. GitHub Actions publie automatiquement
 
 # 6. Dans les repos consommateurs
-npm update @good-food/contracts
+npm update @good-food-maalsi/contracts
 ```
 
 ### Développement local (sans publier)
@@ -182,7 +206,7 @@ npm update @good-food/contracts
 npm link
 
 # Dans franchise-service/
-npm link @good-food/contracts
+npm link @good-food-maalsi/contracts
 ```
 
 ## Structure
