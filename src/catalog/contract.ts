@@ -27,10 +27,17 @@ const dishesContract = c.router({
     method: 'GET',
     path: '/dish',
     query: z.object({
-      menuId: z.string().optional(),
+      menuId: z.string().uuid().optional(),
+      search: z
+        .string()
+        .max(200)
+        .optional()
+        .transform((s) => (typeof s === 'string' ? s.trim() : s) || undefined),
+      categoryId: z.string().uuid().optional(),
     }),
     responses: {
       200: z.object({ data: z.array(dishSchema) }),
+      400: z.object({ message: z.string() }),
     },
     summary: 'Get all dishes',
   },
