@@ -28,12 +28,8 @@ const dishesContract = c.router({
     path: '/dish',
     query: z.object({
       menuId: z.string().uuid().optional(),
-      search: z
-        .string()
-        .max(200)
-        .optional()
-        .transform((s) => (typeof s === 'string' ? s.trim() : s) || undefined),
       categoryId: z.string().uuid().optional(),
+      franchiseId: z.string().uuid().optional(),
     }),
     responses: {
       200: z.object({ data: z.array(dishSchema) }),
@@ -140,8 +136,13 @@ const menusContract = c.router({
   getAll: {
     method: 'GET',
     path: '/menu',
+    query: z.object({
+      categoryId: z.string().uuid().optional(),
+      franchiseId: z.string().uuid().optional(),
+    }),
     responses: {
       200: z.object({ data: z.array(menuSchema) }),
+      400: z.object({ message: z.string() }),
     },
     summary: 'Get all menus',
   },
@@ -297,6 +298,53 @@ const discountsContract = c.router({
   },
 });
 
+// ===== Content Contract (menus + dishes in one call, for category + franchise filter) =====
+const contentContract = c.router({
+  getContent: {
+    method: 'GET',
+    path: '/content',
+    query: z.object({
+      categoryId: z.string().uuid().optional(),
+      franchiseId: z.string().uuid().optional(),
+    }),
+    responses: {
+      200: z.object({
+        data: z.object({
+          menus: z.array(menuSchema),
+          dishes: z.array(dishSchema),
+        }),
+      }),
+      400: z.object({ message: z.string() }),
+    },
+    summary: 'Get menus and dishes filtered by category and/or franchise (one call)',
+  },
+});
+
+// ===== Search Contract =====
+const searchContract = c.router({
+  search: {
+    method: 'GET',
+    path: '/search',
+    query: z.object({
+      q: z
+        .string()
+        .max(200)
+        .optional()
+        .transform((s) => (typeof s === 'string' ? s.trim() : s) || undefined),
+      franchiseId: z.string().uuid().optional(),
+    }),
+    responses: {
+      200: z.object({
+        data: z.object({
+          dishes: z.array(dishSchema),
+          menus: z.array(menuSchema),
+        }),
+      }),
+    },
+    summary: 'Search dishes and menus by name or description',
+  },
+});
+
 // ===== Combined Catalog Contract =====
 export const catalogContract = c.router({
   dishes: dishesContract,
@@ -304,6 +352,8 @@ export const catalogContract = c.router({
   menus: menusContract,
   categories: catalogCategoriesContract,
   discounts: discountsContract,
+  search: searchContract,
+  content: contentContract,
 });
 
 export type CatalogContract = typeof catalogContract;
