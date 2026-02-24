@@ -1,6 +1,6 @@
 {
-  "name": "@good-food-maalsi/contracts",
-  "version": "1.1.0",
+  "name": "@good-food/contracts",
+  "version": "1.1.4",
   "description": "Typed API contracts for Good Food microservices",
   "type": "module",
   "main": "dist/index.js",
@@ -48,7 +48,8 @@
     "typescript": "^5.9.3"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "repository": {
     "type": "git",
