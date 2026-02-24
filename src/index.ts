@@ -12,3 +12,7 @@ export { franchiseContract, type FranchiseContract } from './franchise/contract.
 // Re-export catalog module
 export * as catalog from './catalog/index.js';
 export { catalogContract, type CatalogContract } from './catalog/contract.js';
+
+// Re-export commands module
+export * as commands from './commands/index.js';
+export { commandsContract, type CommandsContract } from './commands/contract.js';
