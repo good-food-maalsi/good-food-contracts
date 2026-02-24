@@ -4,6 +4,7 @@ import { errorResponseSchema, messageResponseSchema } from '../common/schemas.js
 import {
   orderWithItemsSchema,
   createOrderSchema,
+  addOrderItemSchema,
   updateOrderItemsSchema,
   updateOrderStatusSchema,
 } from './schemas.js';
@@ -42,6 +43,19 @@ const ordersContract = c.router({
       401: z.object({ message: z.string() }),
     },
     summary: 'Create a new order (draft status)',
+  },
+  addItem: {
+    method: 'POST',
+    path: '/orders/:id/items',
+    pathParams: z.object({ id: z.string().uuid() }),
+    body: addOrderItemSchema,
+    responses: {
+      200: z.object({ message: z.string(), data: orderWithItemsSchema }),
+      400: errorResponseSchema,
+      404: z.object({ message: z.string() }),
+      401: z.object({ message: z.string() }),
+    },
+    summary: 'Add an item to a draft order (incremental)',
   },
   updateItems: {
     method: 'PATCH',

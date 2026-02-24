@@ -17,17 +17,34 @@ export const orderStatusSchema = z.enum([
   OrderStatus.canceled,
 ]);
 
-// Order item (simplified - no selected options for now)
+// Selected option schema
+export const selectedOptionSchema = z.object({
+  name: z.string(),
+  additionalPrice: z.number().min(0),
+});
+
+// Order item (for creating)
 export const orderItemSchema = z.object({
   itemId: z.string().uuid(),
   quantity: z.number().int().min(1),
   unitPrice: z.number().min(0),
+  selectedOptions: z.array(selectedOptionSchema).optional(),
+});
+
+// Add single order item (same as orderItemSchema but semantically different)
+export const addOrderItemSchema = orderItemSchema;
+
+// Selected option with ID (response)
+export const selectedOptionWithIdSchema = selectedOptionSchema.extend({
+  id: z.string().uuid(),
+  orderItemId: z.string().uuid(),
 });
 
 // Order item with ID (response)
 export const orderItemWithIdSchema = orderItemSchema.extend({
   id: z.string().uuid(),
   orderId: z.string().uuid(),
+  selectedOptions: z.array(selectedOptionWithIdSchema).optional(),
 });
 
 // Create order (draft)
@@ -64,9 +81,12 @@ export const orderWithItemsSchema = orderSchema.extend({
 
 // TypeScript types
 export type OrderStatus = z.infer<typeof orderStatusSchema>;
+export type SelectedOption = z.infer<typeof selectedOptionSchema>;
+export type SelectedOptionWithId = z.infer<typeof selectedOptionWithIdSchema>;
 export type OrderItem = z.infer<typeof orderItemSchema>;
 export type OrderItemWithId = z.infer<typeof orderItemWithIdSchema>;
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;
+export type AddOrderItemInput = z.infer<typeof addOrderItemSchema>;
 export type UpdateOrderItemsInput = z.infer<typeof updateOrderItemsSchema>;
 export type UpdateOrderStatusInput = z.infer<typeof updateOrderStatusSchema>;
 export type Order = z.infer<typeof orderSchema>;
