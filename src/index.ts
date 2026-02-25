@@ -1,18 +1,27 @@
 // Main exports
-export * from './common/index.js';
+export * from "./common/index.js";
 
 // Re-export auth module
-export * as auth from './auth/index.js';
-export { authContract, type AuthContract } from './auth/contract.js';
+export * as auth from "./auth/index.js";
+export { authContract, type AuthContract } from "./auth/contract.js";
 
 // Re-export franchise module
-export * as franchise from './franchise/index.js';
-export { franchiseContract, type FranchiseContract } from './franchise/contract.js';
+export * as franchise from "./franchise/index.js";
+export {
+    franchiseContract,
+    type FranchiseContract,
+} from "./franchise/contract.js";
 
 // Re-export catalog module
-export * as catalog from './catalog/index.js';
-export { catalogContract, type CatalogContract } from './catalog/contract.js';
+export * as catalog from "./catalog/index.js";
+export { catalogContract, type CatalogContract } from "./catalog/contract.js";
 
 // Re-export commands module
-export * as commands from './commands/index.js';
-export { commandsContract, type CommandsContract } from './commands/contract.js';
+export * as commands from "./commands/index.js";
+export {
+    commandsContract,
+    type CommandsContract,
+} from "./commands/contract.js";
+
+// Re-export events module
+export * as events from "./events/index.js";
